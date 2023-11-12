@@ -1,0 +1,15 @@
+
+.cardStyle {
+    background-image: url('../assets/1.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    margin: 0 auto;
+    height: 500px;
+    color: #ffffff;
+}
+
+.info {
+    padding-top: 50px;
+    padding-left: 25px;
+}

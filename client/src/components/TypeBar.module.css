@@ -1,0 +1,8 @@
+.listGroup {
+    cursor: pointer;
+}
+.listGroup:hover {
+    transition: 200ms;
+    color: #fff;
+    background-color: #0D6EFD;
+}

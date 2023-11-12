@@ -1,0 +1,35 @@
+/* NavBar.module.css */
+
+.navbar {
+    background-color: transparent;
+    padding: 10px 20px;
+}
+
+.navLink {
+    color: black !important;
+    margin: 0 20px;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+}
+
+/* .navLink:hover {
+    color: red !important;
+    margin: 0 20px;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+} */
+
+.navLink img {
+    height: 30px; /* Adjust the height as needed */
+    margin-right: 10px;
+}
+
+.nav-link:hover {
+    text-decoration: underline;
+}
+
+.adminPanelButton {
+    margin-left: 25px;
+}
