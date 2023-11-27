@@ -1,25 +1,22 @@
-import React, { createContext } from 'react';
-import ReactDOM from 'react-dom/client';
+import React, {createContext} from 'react';
 import App from './App';
-import UserStore from './store/UserStore'
-import ProductStore from './store/ProductStore' 
+import { createRoot } from 'react-dom/client';
+import UserStore  from './Store/UserStore'
+import ProductStore from "./Store/ProductStore";
+
 
 export const Context = createContext(null)
-// console.log(process.env.REACT_APP_API_URL);
-const root = ReactDOM.createRoot(document.getElementById('root'));
+const rootElement = document.getElementById('root');
+const root = createRoot(rootElement); // createRoot(container!) if you use TypeScript
+console.log(process.env.REACT_APP_API_URL)
 root.render(
-  <React.StrictMode>
-    <Context.Provider value={{ user: new UserStore(), product: new ProductStore() }}>
-      <App />
-    </Context.Provider>
-  </React.StrictMode>
+    <Context.Provider value={{
+        user: new UserStore(),
+        product: new ProductStore()
+    }}>
+        <App />
+    </Context.Provider>,
 );
 
-// ReactDOM.render(
-//   <App />,
-//   document.getElementById('root')
-// );
-// // ReactDOM.render(
-// //   <Router history={browserHistory} routes={routes} />,
-// //   document.getElementById('root')
-// // );
+
+

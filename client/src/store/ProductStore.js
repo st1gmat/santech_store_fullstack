@@ -1,155 +1,70 @@
-import {makeAutoObservable} from 'mobx';
+import {makeAutoObservable} from "mobx";
 
 export default class ProductStore {
     constructor() {
-        this._types = [
-            {
-                id: 2,
-                name: "Смесители"
-            },
-            {
-                id: 3,
-                name: "Раковины"
-            },
-            {
-                id: 4,
-                name: "Ванны"
-            },
-            {
-                id: 5,
-                name: "Аксессуары"
-            }
-        ]
-        this._brands = [
-            {
-                id: 1,
-                name: "Grohe"
-            },
-            {
-                id: 2,
-                name: "Santeri"
-            },
-            {
-                id: 3,
-                name: "Geberit"
-            }
-              
-        ]
-        this._products = [
-            {
-                id: 1,
-                name: "GROHE Euroeco Special",
-                pric: 18950,
-                rating: 0,
-                img: "https://annaoliver.uk/wp-content/uploads/2016/02/Medium-Circle-400x400.png",
-            },
-            {
-                id: 5,
-                name: "Geberit HyTronic",
-                price: 39040,
-                rating: 0,
-                // img: "60e8f740-f45a-4830-a1f1-b46c36c8c12f.jpg",
-                img: "https://annaoliver.uk/wp-content/uploads/2016/02/Medium-Circle-400x400.png",
-            },
-            {
-                id: 6,
-                name: "Geberit Brenta",
-                price: 46206,
-                rating: 0,
-                // img: "60e8f740-f45a-4830-a1f1-b46c36c8c12f.jpg",
-                img: "https://annaoliver.uk/wp-content/uploads/2016/02/Medium-Circle-400x400.png",
-            },
-            {
-                id: 7,
-                name: "GROHE Minta",
-                price: 41790,
-                rating: 0,
-                // img: "1b3d3039-7a0d-4ad5-ac26-90e01f3f36c2.jpg",
-                img: "https://annaoliver.uk/wp-content/uploads/2016/02/Medium-Circle-400x400.png",
-            },
-            {
-                id: 7,
-                name: "GROHE Minta",
-                price: 41790,
-                rating: 0,
-                // img: "1b3d3039-7a0d-4ad5-ac26-90e01f3f36c2.jpg",
-                img: "https://annaoliver.uk/wp-content/uploads/2016/02/Medium-Circle-400x400.png",
-            },
-            {
-                id: 7,
-                name: "GROHE Minta",
-                price: 41790,
-                rating: 0,
-                // img: "1b3d3039-7a0d-4ad5-ac26-90e01f3f36c2.jpg",
-                img: "https://annaoliver.uk/wp-content/uploads/2016/02/Medium-Circle-400x400.png",
-            },
-            {
-                id: 7,
-                name: "GROHE Minta",
-                price: 41790,
-                rating: 0,
-                // img: "1b3d3039-7a0d-4ad5-ac26-90e01f3f36c2.jpg",
-                img: "https://annaoliver.uk/wp-content/uploads/2016/02/Medium-Circle-400x400.png",
-            },
-            {
-                id: 7,
-                name: "GROHE Minta",
-                price: 41790,
-                rating: 0,
-                // img: "1b3d3039-7a0d-4ad5-ac26-90e01f3f36c2.jpg",
-                img: "https://annaoliver.uk/wp-content/uploads/2016/02/Medium-Circle-400x400.png",
-            },
-            {
-                id: 7,
-                name: "GROHE Minta",
-                price: 41790,
-                rating: 0,
-                // img: "1b3d3039-7a0d-4ad5-ac26-90e01f3f36c2.jpg",
-                img: "https://annaoliver.uk/wp-content/uploads/2016/02/Medium-Circle-400x400.png",
-            },
-            {
-                id: 7,
-                name: "GROHE Minta",
-                price: 41790,
-                rating: 0,
-                // img: "1b3d3039-7a0d-4ad5-ac26-90e01f3f36c2.jpg",
-                img: "https://annaoliver.uk/wp-content/uploads/2016/02/Medium-Circle-400x400.png",
-            },
-            {
-                id: 7,
-                name: "GROHE Minta",
-                price: 41790,
-                rating: 0,
-                // img: "1b3d3039-7a0d-4ad5-ac26-90e01f3f36c2.jpg",
-                img: "https://annaoliver.uk/wp-content/uploads/2016/02/Medium-Circle-400x400.png",
-            },
-            
-        ]
-
+        this._types = []
+        this._brands = []
+        this._products = []
+        this._legals = []
+        this._baskets = []
+        this._orders = []
+        this._orders_lists = []
         this._selectedType = {}
         this._selectedBrand = {}
-
+        this._selectedLegal = {}
+        this._selectedOrder = 0
+        this._page = 1
+        this._totalCount = 0
+        this._limit = 8
         makeAutoObservable(this)
     }
 
     setTypes(types) {
         this._types = types
-    }
 
+    }
     setBrands(brands) {
         this._brands = brands
     }
-
-    setProdcuts(products) {
+    setLegals(legals) {
+        this._legals= legals
+    }
+    setProducts(products) {
         this._products = products
     }
+
+    setBaskets(basket){
+        this._baskets = basket
+    }
+
+    setOrders(order){
+        this._orders = order
+    }
+    setOrdersList(order){
+        this._orders_lists = order
+    }
+
     setSelectedType(type) {
+        this.setPage(1)
         this._selectedType = type
     }
     setSelectedBrand(brand) {
+        this.setPage(1)
         this._selectedBrand = brand
     }
-    
+    setSelectedOrder(order) {
+        this._selectedOrder = order
+    }
+    setSelectedLegal(legal) {
+        this._selectedLegal = legal
+    }
+
+    setPage(page) {
+        this._page = page
+    }
+    setTotalCount(count) {
+        this._totalCount = count
+    }
 
     get types() {
         return this._types
@@ -160,11 +75,37 @@ export default class ProductStore {
     get products() {
         return this._products
     }
+    get basket() {
+        return this._baskets
+    }
+    get order() {
+        return this._orders
+    }
+
     get selectedType() {
         return this._selectedType
+    }
+
+    get selectedOrder() {
+
+        return this._selectedOrder
     }
     get selectedBrand() {
         return this._selectedBrand
     }
-
+    get selectedLegal() {
+        return this._selectedLegal
+    }
+    get totalCount() {
+        return this._totalCount
+    }
+    get page() {
+        return this._page
+    }
+    get limit() {
+        return this._limit
+    }
+    get legals() {
+        return this._legals
+    }
 }

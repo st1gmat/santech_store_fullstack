@@ -1,38 +1,51 @@
-import Admin from "./pages/Admin"
-import Auth from "./pages/Auth"
-import Basket from "./pages/Basket"
-import ProductPage from "./pages/ProductPage"
-import Shop from "./pages/Shop"
-import { ADMIN_ROUTE, BASKET_ROUTE, LOGIN_ROUTE, PRODUCT_ROUTE, REGISTRATION_ROUTE, SHOP_ROUTE } from "./utils/consts"
+import {HOME_ROUTE, ADMIN_ROUTE, BASKET_ROUTE, PRODUCT_ROUTE, LOGIN_ROUTE, ORDER_ROUTE, REG_ROUTE, SHOP_ROUTE} from "./utils/consts";
+import Basket from "./Pages/Basket";
+import AdminPage from "./Pages/AdminPage";
+import Shop from "./Pages/Shop";
+import Home from "./Pages/Home"
+import Auth from "./Pages/Auth";
+import ProductPage from "./Pages/ProductPage";
+import Order from "./Pages/Order";
+
 
 export const authRoutes = [
-    {
-        // path: ADMIN_ROUTE,
-        path: ADMIN_ROUTE,
-        Component: Admin
-    },
-    {
-        path: BASKET_ROUTE,
-        Component: Basket
-    }
+
+  
+
+  {
+    path: ADMIN_ROUTE,
+    Component: AdminPage
+  },
+  {
+    path: BASKET_ROUTE,
+    Component: Basket
+  }
 ]
 
 export const publicRoutes = [
-    {
-        path: SHOP_ROUTE,
-        // path: "/shop",
-        Component: Shop
-    },
-    {
-        path: LOGIN_ROUTE,
-        Component: Auth
-    },
-    {
-        path: REGISTRATION_ROUTE,
-        Component: Auth
-    },
-    {
-        path: PRODUCT_ROUTE,
-        Component: ProductPage
-    },
+  {
+    path: HOME_ROUTE,
+    Component: Home
+  },
+  {
+    path: SHOP_ROUTE,
+    Component: Shop
+  },
+  {
+    path: LOGIN_ROUTE,
+    Component: Auth
+  },
+  {
+    path: REG_ROUTE,
+    Component: Auth
+  },
+  {
+    path: PRODUCT_ROUTE + '/:id',
+    Component: ProductPage
+  },
+  {
+    path: ORDER_ROUTE,
+    Component: Order
+  },
+
 ]

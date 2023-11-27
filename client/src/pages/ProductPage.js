@@ -1,59 +1,119 @@
-import React from 'react'
-import { Container, Col, Image, Card, Row, Button } from 'react-bootstrap'
+import React, {useEffect, useState} from 'react';
+import {Button, Card, Col, Container, Form, Image, Row} from "react-bootstrap";
+import {useParams} from 'react-router-dom';
+import {addToBasket, delProduct, fetchOneProduct, setDescription, updateAmount} from "../http/productAPI";
+import {observer} from "mobx-react-lite";
+import {useContext} from "react";
+import {Context} from "../index";
+import SetDescription from "../components/modals/SetDescription";
 
-const ProductPage = () => {
+const ProductPage = observer(() => {
 
-  const product = {
-    id: 1,
-    name: "GROHE Minta",
-    price: 41790,
-    rating: 0,
-    // img: "1b3d3039-7a0d-4ad5-ac26-90e01f3f36c2.jpg",
-    img: "https://annaoliver.uk/wp-content/uploads/2016/02/Medium-Circle-400x400.png",
-  }
-  const description = [
-    {id: 1, title: 'Тип', description: 'Хром'},
-    {id: 2, title: 'Бла', description: 'Бла'},
-    {id: 3, title: 'Уникальная соврменнная гениальная', description: 'Хром'},
-    {id: 4, title: 'Уникальная соврменнная гениальная', description: 'Хром'}
-  ]
-  return (
-    <Container className='mt-5 ms-6 d-flex'>
-      <Col md={6}>
-        <Image width={500} height={500} src={product.img}/>
-      </Col>
-      <Col md={6}>
-        <Card style={{height:"500px", padding:"20px"}} border='dark'>
-          <div className='d-flex justify-content-between align-items-center'>
-            <h2>{product.name}</h2>
-            <div>
-              <span className='fs-5'>{product.rating}</span>
-              <svg width={30} height={30} className='mt-2'>
-                <path d="M2.866 14.85c-.078.444.36.791.746.593l4.39-2.256 4.389 2.256c.386.198.824-.149.746-.592l-.83-4.73 3.522-3.356c.33-.314.16-.888-.282-.95l-4.898-.696L8.465.792a.513.513 0 0 0-.927 0L5.354 5.12l-4.898.696c-.441.062-.612.636-.283.95l3.523 3.356-.83 4.73zm4.905-2.767-3.686 1.894.694-3.957a.565.565 0 0 0-.163-.505L1.71 6.745l4.052-.576a.525.525 0 0 0 .393-.288L8 2.223l1.847 3.658a.525.525 0 0 0 .393.288l4.052.575-2.906 2.77a.565.565 0 0 0-.163.506l.694 3.957-3.686-1.894a.503.503 0 0 0-.461 0z"/>
-              </svg>
-            </div>
-           
-          </div>
-          <div className='mt-1 fs-1 justify-content-between d-flex'>
-            <span>Цена:</span>
-            <div className='ms-0'>{product.price} ₽</div> 
-          </div>
-          <Button variant='outline-dark' className='mt-3'>Добавить в корзину</Button>
-          <div className='mt-4'>
-            <span className='fs-4'>Характеристики</span>
-              
-            {description.map(info => 
-              <Row key={info.id}>
-                {info.title}: {info.description}
-              </Row>  
-            )}
-          </div>
-          
+    const {user} = useContext(Context)
+    const [product, setProduct] = useState({info: []})
+    const {id} = useParams()
+    const [productVisible, setProductVisible] = useState(false)
+    useEffect(() => {
+        fetchOneProduct(id).then(data => setProduct(data))
+    }, [])
 
-        </Card>
-      </Col>
-    </Container>
-  )
-}
+    const [value, setValue] = useState('')
 
-export default ProductPage
+    const Amount = () => {
+        updateAmount(id, value).then(response => alert(`Количество товара обновлено`))
+    }
+
+
+    // ------- функция добавления в корзину ------- //
+    const add = () => {
+        const formData = new FormData()
+        formData.append('productId', id)
+        addToBasket(formData).then(response => alert(`Товар ` + product.name + ` был добавлен в корзину!`))
+    }
+
+    return (
+        <Container className="mt-3">
+            <Row>
+                <Col md={4}>
+                    <Image width={300} height={300} src={process.env.REACT_APP_API_URL + product.img}/>
+                    <h1>{product.name}</h1>
+                </Col>
+                <Col>
+                    <h2>Характеристики</h2>
+                    {product.info.map((info, index) =>
+                        <Row key={info.id} style={{
+                            border: '2px solid lightgray',
+                            background: index % 2 === 0 ? 'lightgray' : 'transparent',
+                            padding: 10
+                        }}>
+                            <Col>{info.title}</Col><Col> : {info.description}</Col>
+                        </Row>
+                    )}
+                </Col>
+            </Row><br/>
+            <Row>
+                <Col className={"w-75"}>
+                    <label >
+                        {product._info}
+                    </label>
+                </Col>
+                <Col md={3}>
+                <Card
+                    className="d-flex flex-column align-items-center align-self-end p-3 "
+                    style={{width: 300, fontSize: 32, border: '5px solid light'}}
+                >
+                    <h3>Вид: {product.price} руб.</h3>
+
+
+                    <Button variant={"outline-dark"} className="bg-success text-light" onClick={add}>Добавить в корзину</Button>
+
+                </Card>
+                </Col>
+            </Row>
+            {user.isRole === "ADMIN"?
+            <Row>
+
+                <Button
+                    variant={"outline-dark"}
+                    className="mt-4 p-2 bg-primary text-light"
+                    onClick={() => setProductVisible(true)}
+                >
+                    Добавить описание
+                </Button>
+                <Button
+                    variant={"outline-dark"}
+                    className="mt-4 p-2 bg-danger text-light"
+                    onClick={() => delProduct(id).then(response => alert(`Товар удален!`)) }
+                >
+                    Удалить
+                </Button>
+                <Row>
+                    <Col>
+                        <Form>
+                        <Form.Control
+                            value={value}
+                            onChange={e => setValue(e.target.value)}
+                            placeholder={"Введите количество "}
+                            style={{height:"auto"}}
+                            className="mt-4 w-100 p-2"
+                        />
+                    </Form>
+                    </Col>
+               <Col>
+                   <Button
+                       variant={"outline-dark"}
+                   className="mt-4 w-100 p-2 bg-success text-light"
+                   onClick={Amount}
+               >
+                   Обновить количество
+               </Button>
+               </Col>
+
+                </Row>
+                <SetDescription show={productVisible} onHide={() => setProductVisible(false)}/>
+            </Row>:<br/>
+        }
+        </Container>
+    );
+});
+export default ProductPage;

@@ -1,85 +1,83 @@
 import React, {useContext, useState} from 'react';
-import { Container, Form, Button, Row } from 'react-bootstrap';
-import { Link, useLocation, useNavigate} from 'react-router-dom'; // Импортируйте Link вместо NavLink
-import { observer } from "mobx-react-lite"
-import styles from './Auth.module.css';
-import { LOGIN_ROUTE, REGISTRATION_ROUTE, SHOP_ROUTE } from '../utils/consts';
-import { login, registration } from '../http/userAPI';
-import {Context} from '../index'
+import {Button, Card, Container, Form} from "react-bootstrap";
+import {useLocation, NavLink, useNavigate} from "react-router-dom";
+import {LOGIN_ROUTE, REG_ROUTE, SHOP_ROUTE} from "../utils/consts";
+import {observer} from "mobx-react-lite";
+import {login, registration} from "../http/userAPI";
+import {Context} from "../index";
+import Row from "react-bootstrap/Row";
+import {$authHost} from "../http";
 
 const Auth = observer(() => {
-  const {user} = useContext(Context)
-  const location = useLocation()
-  const history = useNavigate()
-  const isLogin = location.pathname === LOGIN_ROUTE
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
+    const {user} = useContext(Context)
+    const location = useLocation()
+    const history = useNavigate()
+    const isLogin = location.pathname === LOGIN_ROUTE
+    const [email, setEmail] = useState('')
+    const [password, setPassword] = useState('')
 
-  const click = async () => {
-      try {
-          let data;
-          if (isLogin) {
-              data = await login(email, password);
-          } else {
-              data = await registration(email, password);
-          }
-          user.setUser(data.role)
-          user.setIsUser(data.id)
-          user.setIsAuth(true)
-          history(SHOP_ROUTE)
-      } catch (e) {
-          alert(e.response.data.message)
-      }
+    const click = async () => {
+        try {
+            let data;
+            if (isLogin) {
+                data = await login(email, password);
+            } else {
+                data = await registration(email, password);
+            }
+            user.setUser(data.role)
+            user.setIsUser(data.id)
+            user.setIsAuth(true)
+            history(SHOP_ROUTE)
+        } catch (e) {
+            console.log(e)
+        }
 
-  }
+    }
 
-  // console.log(location);
-  return (
-    <Container className={`d-flex flex-column justify-content-center align-items-center ${styles.authContainer}`} >
-      <h2>{isLogin ? "Авторизация" : "Регистрация"}</h2>
-      <Form className={styles.authForm}>
-        <Form.Group controlId="formBasicEmail">
-          <Form.Label className=''>Email</Form.Label>
-          <Form.Control 
-            type="email" 
-            placeholder="Введите email" 
-            value={email} 
-            onChange={e => setEmail(e.target.value)}
-          />
-        </Form.Group>
+    return (
+        <Container
+            className="d-flex justify-content-center align-items-center"
+            style={{height: window.innerHeight - 54}}
+        >
+            <Card style={{width: 600}} className="p-5">
+                <h2 className="m-auto">{isLogin ? 'Авторизация' : "Регистрация"}</h2>
+                <Form className="d-flex flex-column">
+                    <Form.Control
+                        className="mt-3"
+                        placeholder="Введите ваш email..."
+                        value={email}
+                        onChange={e => setEmail(e.target.value)}
+                    />
+                    <Form.Control
+                        className="mt-3"
+                        placeholder="Введите ваш пароль..."
+                        value={password}
+                        onChange={e => setPassword(e.target.value)}
+                        type="password"
+                    />
+                    <Row className="justify-content-end mt-3 pl-3 pr-3">
+                        {isLogin ?
+                            <div>
+                                Есть аккаунт? <NavLink to={REG_ROUTE}>Зарегистрируйся!</NavLink>
+                            </div>
+                            :
+                            <div>
+                                Уже есть аккаунт? <NavLink to={LOGIN_ROUTE}>Войди!</NavLink>
+                            </div>
+                        }
+                        <Button
+                            variant={"outline-success"}
+                            onClick={click}
+                            style={{width: 150}}
+                        >
+                            {isLogin ? 'Войти' : 'Регистрация'}
+                        </Button>
+                    </Row>
 
-        <Form.Group controlId="formBasicPassword">
-          <Form.Label>Пароль</Form.Label>
-          <Form.Control 
-            type="password" 
-            placeholder="Пароль" 
-            value={password} 
-            onChange={e => setPassword(e.target.value)}
-          />
-        </Form.Group>
-        <Row>
-          {isLogin ?
-            <div>
-              Нет аккаунта? <Link className={styles.regLink} to={REGISTRATION_ROUTE}>Зарегистрируйся!</Link>
-            </div>
-            :
-            <div>
-              Есть аккаунт? <Link className={styles.regLink} to={LOGIN_ROUTE}>Войдите!</Link>
-            </div>
-          }
-          
-          <Button 
-            className='container'
-            variant="outline-primary" 
-            onClick={click}
-            style={{ marginTop: '15px', width: '410px' }}
-          >
-            {isLogin ? "Войти" : "Зарегистрироваться"}
-          </Button>
-        </Row>
-      </Form>
-    </Container>
-  );
+                </Form>
+            </Card>
+        </Container>
+    );
 });
 
 export default Auth;

@@ -1,25 +1,28 @@
-import React, { useContext } from 'react'
-import { ListGroup } from 'react-bootstrap'
-import {observer} from 'mobx-react-lite'
-import { Context } from '../index'
-import styles from './TypeBar.module.css';
+import React, {useContext} from 'react';
+import {observer} from "mobx-react-lite";
+import {Context} from "../index";
+import ListGroup from "react-bootstrap/ListGroup";
+
 
 const TypeBar = observer(() => {
+
     const {product} = useContext(Context)
     return (
-        <ListGroup>
-            {product.types.map(type => 
-                <ListGroup.Item 
-                    className={styles.listGroup}
+        <ListGroup style={{marginTop:'75px'}}>
+            {product.types.map(type =>
+                <ListGroup.Item
+                    style={{cursor: 'pointer'}}
                     active={type.id === product.selectedType.id}
-                    onClick={()=>product.setSelectedType(type)}
+                    onClick={() => product.setSelectedType(type)}
                     key={type.id}
-                > 
-                    {type.name} 
+                >
+                    {type.name}
+                    <br/>
                 </ListGroup.Item>
             )}
         </ListGroup>
-    )
-})
 
-export default TypeBar
+    );
+});
+
+export default TypeBar;

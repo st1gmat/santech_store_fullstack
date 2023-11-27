@@ -1,0 +1,22 @@
+.headerSection {
+    min-height: 600px;
+    background-image: url('../assets/backgr.jpg');
+    background-size: cover;
+    background-position: center;
+}
+  
+.contInfo {
+    color: #000;
+    padding: 100px 0;
+    margin-left: 400px;
+
+}
+
+.cardBox {
+    color: #fff;
+    min-width: 300px;
+    min-height: 300px;
+    margin: 0 300px;
+    background: rgb(62, 61, 59);
+    padding: 30px;
+}

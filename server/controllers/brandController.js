@@ -1,11 +1,15 @@
 const {Brand, Product} = require('../models/models')
-const ApiError = require('../error/ApiError')
+const ApiError = require('../error/ApiError');
 
 class BrandController {
-    async create(req, res) {
+    async create(req, res, next) {
+        try{
         const {name} = req.body
         const brand = await Brand.create({name})
-        return res.json(brand)
+        }catch (e)
+        {
+            next(ApiError.badRequest(e.message))  // middleware error => next
+        }
     }
 
     async delete(req, res) {
@@ -26,11 +30,10 @@ class BrandController {
         return res.json({ message: 'Brand deleted' });
     }
 
+
+
     async getAll(req, res) {
         const brands = await Brand.findAll()
-        if(!brands) {
-            ApiError.badRequest("Not found!")
-        }
         return res.json(brands)
     }
 }
