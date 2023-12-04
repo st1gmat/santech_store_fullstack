@@ -14,9 +14,9 @@
 
 .cardBox {
     color: #fff;
-    min-width: 300px;
+    max-width: 600px;
     min-height: 300px;
-    margin: 0 300px;
+    margin: 0 500px;
     background: rgb(62, 61, 59);
     padding: 30px;
 }

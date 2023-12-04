@@ -1,11 +1,12 @@
 import React, {useEffect, useState} from 'react';
 import {Button, Card, Col, Container, Form, Image, Row} from "react-bootstrap";
-import {useParams} from 'react-router-dom';
-import {addToBasket, delProduct, fetchOneProduct, setDescription, updateAmount} from "../http/productAPI";
+import {useNavigate, useParams} from 'react-router-dom';
+import {addToBasket, delProduct, fetchOneProduct, updateAmount} from "../http/productAPI";
 import {observer} from "mobx-react-lite";
 import {useContext} from "react";
 import {Context} from "../index";
 import SetDescription from "../components/modals/SetDescription";
+import { REG_ROUTE } from '../utils/consts';
 
 const ProductPage = observer(() => {
 
@@ -13,6 +14,7 @@ const ProductPage = observer(() => {
     const [product, setProduct] = useState({info: []})
     const {id} = useParams()
     const [productVisible, setProductVisible] = useState(false)
+    const history = useNavigate();
     useEffect(() => {
         fetchOneProduct(id).then(data => setProduct(data))
     }, [])
@@ -62,10 +64,14 @@ const ProductPage = observer(() => {
                     className="d-flex flex-column align-items-center align-self-end p-3 "
                     style={{width: 300, fontSize: 32, border: '5px solid light'}}
                 >
-                    <h3>Вид: {product.price} руб.</h3>
+                    <h3>Цена: {product.price} руб.</h3>
 
-
+                    {user.isAuth ? 
                     <Button variant={"outline-dark"} className="bg-success text-light" onClick={add}>Добавить в корзину</Button>
+                    : 
+                    <Button variant={"outline-dark"} className="bg-success text-light" onClick={history(REG_ROUTE)}>Войти в аккаунт</Button>
+                    }
+                    
 
                 </Card>
                 </Col>

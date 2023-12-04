@@ -8,12 +8,8 @@ const CreateBrand = ({show, onHide}) => {
 
     const addBrand = () => {
         try{
-            createBrand({name: value}).then(data => {
-                onHide()
-                setValue('')
-            })
-        } catch (e)
-        {
+            createBrand({name: value}).then(data => { onHide() })
+        } catch (e) {
             console.error(e);
         }
     }

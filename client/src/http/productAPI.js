@@ -105,7 +105,7 @@ export const getOrder = async (id) => {
 
 export const getUserOrder = async (id) => {
     if(!id)id = 0;
-    const {data} = await $authHost.get('api/order/user/'+id, id)
+    const {data} = await $authHost.get('api/order/'+id, id)
     return data
 }
 
@@ -125,3 +125,8 @@ export const updateAmount = async (_id, _amount) => {
     const {data} = await $authHost.post('api/product/update/'+_id, {_id, _amount})
     return data
 }
+
+export const deleteOrder = async (id) => {
+    const {response} = await $authHost.delete('api/order/' + id);
+    return response;
+};

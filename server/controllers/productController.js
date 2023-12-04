@@ -87,7 +87,7 @@ class ProductController {
         )
         return res.json(product)
     }
-
+    
     async updated(req, res) {
         const {_id,_amount} = req.body
         const product = await Product.update(

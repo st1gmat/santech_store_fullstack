@@ -21,14 +21,16 @@ export default class ProductStore {
 
     setTypes(types) {
         this._types = types
-
     }
+
     setBrands(brands) {
         this._brands = brands
     }
+
     setLegals(legals) {
         this._legals= legals
     }
+
     setProducts(products) {
         this._products = products
     }
@@ -40,6 +42,7 @@ export default class ProductStore {
     setOrders(order){
         this._orders = order
     }
+
     setOrdersList(order){
         this._orders_lists = order
     }
@@ -48,13 +51,17 @@ export default class ProductStore {
         this.setPage(1)
         this._selectedType = type
     }
+
     setSelectedBrand(brand) {
         this.setPage(1)
         this._selectedBrand = brand
     }
+
     setSelectedOrder(order) {
         this._selectedOrder = order
     }
+
+    
     setSelectedLegal(legal) {
         this._selectedLegal = legal
     }
@@ -62,6 +69,7 @@ export default class ProductStore {
     setPage(page) {
         this._page = page
     }
+
     setTotalCount(count) {
         this._totalCount = count
     }
@@ -69,12 +77,15 @@ export default class ProductStore {
     get types() {
         return this._types
     }
+
     get brands() {
         return this._brands
     }
+
     get products() {
         return this._products
     }
+
     get basket() {
         return this._baskets
     }
@@ -87,7 +98,6 @@ export default class ProductStore {
     }
 
     get selectedOrder() {
-
         return this._selectedOrder
     }
     get selectedBrand() {
@@ -107,5 +117,11 @@ export default class ProductStore {
     }
     get legals() {
         return this._legals
+    }
+    get selectedOrder() {
+        return this._selectedOrder
+    }
+    get orders_lists() {
+        return this._orders_lists
     }
 }

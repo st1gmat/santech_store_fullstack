@@ -52,7 +52,10 @@ const Home = observer(() => {
         <Container className='d-flex justify-content-center'>
             <ProductList />
         </Container>
-        
+        <Container>
+          <Pages/>
+
+        </Container>
 
       </div>
       
