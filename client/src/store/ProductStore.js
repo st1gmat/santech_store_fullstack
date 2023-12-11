@@ -4,6 +4,7 @@ export default class ProductStore {
     constructor() {
         this._types = []
         this._brands = []
+        this._categories = []
         this._products = []
         this._legals = []
         this._baskets = []
@@ -11,6 +12,7 @@ export default class ProductStore {
         this._orders_lists = []
         this._selectedType = {}
         this._selectedBrand = {}
+        this._selectedCategory = {}
         this._selectedLegal = {}
         this._selectedOrder = 0
         this._page = 1
@@ -25,6 +27,9 @@ export default class ProductStore {
 
     setBrands(brands) {
         this._brands = brands
+    }
+    setCategories(categories) {
+        this._categories = categories
     }
 
     setLegals(legals) {
@@ -56,6 +61,10 @@ export default class ProductStore {
         this.setPage(1)
         this._selectedBrand = brand
     }
+    SetSelectedCategory(category) {
+        this.setPage(1)
+        this._selectedCategory = category
+    }
 
     setSelectedOrder(order) {
         this._selectedOrder = order
@@ -82,6 +91,10 @@ export default class ProductStore {
         return this._brands
     }
 
+    get categories() {
+        return this._categories
+    }
+
     get products() {
         return this._products
     }
@@ -102,6 +115,10 @@ export default class ProductStore {
     }
     get selectedBrand() {
         return this._selectedBrand
+    }
+
+    get selectedCategory() {
+        return this._selectedCategory
     }
     get selectedLegal() {
         return this._selectedLegal

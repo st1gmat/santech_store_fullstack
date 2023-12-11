@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Table, Button } from 'react-bootstrap';
 import { deleteType, fetchTypes } from '../../http/productAPI';
+import DeleteConfirmationModal from './DeleteConfirmationModal';
 
 const DeleteType = () => {
   const [types, setTypes] = useState([]);
+  const [selectedTypeId, setSelectedTypeId] = useState(null);
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     fetchTypes().then((data) => setTypes(data));
@@ -15,9 +18,20 @@ const DeleteType = () => {
       // Update the types list after deletion
       const updatedTypes = types.filter((type) => type.id !== id);
       setTypes(updatedTypes);
+      handleCloseModal();
     } catch (error) {
       console.error('Error deleting type:', error);
     }
+  };
+
+  const handleShowModal = (id) => {
+    setSelectedTypeId(id);
+    setShowModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setSelectedTypeId(null);
+    setShowModal(false);
   };
 
   return (
@@ -38,7 +52,7 @@ const DeleteType = () => {
               <td>{type.name}</td>
               <td>
                 <Button
-                  onClick={() => handleDelete(type.id)}
+                  onClick={() => handleShowModal(type.id)}
                   variant={'outline-danger'}
                 >
                   Удалить
@@ -48,6 +62,13 @@ const DeleteType = () => {
           ))}
         </tbody>
       </Table>
+
+      <DeleteConfirmationModal
+        show={showModal}
+        onHide={handleCloseModal}
+        onDelete={() => handleDelete(selectedTypeId)}
+        productName={types.find((type) => type.id === selectedTypeId)?.name}
+      />
     </div>
   );
 };

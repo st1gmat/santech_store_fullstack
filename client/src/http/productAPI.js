@@ -30,6 +30,22 @@ export const fetchBrands = async () => {
     const {data} = await $host.get('api/brand', )
     return data
 }
+
+export const createCategory = async (category) => {
+    const {data} = await $authHost.post('api/category/', category)
+    return data
+}
+
+export const deleteCategory = async (id) => {
+    const {response} = await $authHost.delete('api/category/'+ id)
+    return response
+}
+
+export const fetchCategory = async () => {
+    const {data} = await $host.get('api/category', )
+    return data
+}
+
 export const fetchLegal = async () => {
     const {data} = await $host.get('api/legal', )
     return data
@@ -56,17 +72,30 @@ export const delProduct = async (id) => {
     return data
 }
 
+export const fullDeleteProduct = async (id) => {
+    const {response} = await $authHost.delete('api/product/'+ id)
+    return response
+}
+
 export const setDescription = async (_id, text) => {
     const {data} = await $authHost.post('api/product/update', _id, text)
     return data
 }
 
-export const fetchProducts = async (typeId, brandId, page, limit) => {
+export const fetchProducts = async (typeId, brandId, categoryId, page, limit) => {
     const {data} = await $host.get('api/product', {params: {
-            typeId, brandId, page, limit
+            typeId, brandId, categoryId, page, limit
         }})
+    // console.log('Request parameters:', typeId, brandId, categoryId, page, limit);
+    // console.log(data)
     return data
 }
+
+export const fetchAllProducts = async () => {
+    const {data} = await $host.get('api/product/all', )
+    return data
+}
+
 
 export const fetchOneProduct = async (id) => {
     const {data} = await $host.get('api/product' + '/'+id)

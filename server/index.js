@@ -7,7 +7,7 @@ const fileUpload = require('express-fileupload')
 const  router = require('./routes/index')
 const errorHandler = require('./middleware/ErrorHandlingMiddleware')
 const path = require('path')
-const { log } = require('console')
+// const { log } = require('console')
 const PORT = process.env.PORT || 4000
 
 const app = express()
@@ -23,7 +23,7 @@ const start = async () => // функция запуска сервака
 {
     try{
         await sequelize.authenticate() // функция для проверки что с подключением все ок
-        await sequelize.sync() // таблица будет создана если еще не существует
+        await sequelize.sync({ alter: true }) // таблица будет создана если еще не существует
         app.listen(PORT,()=> console.log(`sever run on ${PORT}`))
 
     }

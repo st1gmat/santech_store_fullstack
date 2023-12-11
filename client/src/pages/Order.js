@@ -4,11 +4,14 @@ import { Context } from '../';
 import { getOrder, getUserOrderList, deleteOrder, updateUserOrder } from '../http/productAPI';
 import { Card, Col, Container, Row, Button, Table } from 'react-bootstrap';
 import { observer } from 'mobx-react-lite';
+import { useNavigate } from 'react-router-dom';
+import { PRODUCT_ROUTE } from '../utils/consts';
 
 const Order = observer(() => {
     const { product, user } = useContext(Context);
     const [selectedOrderStatus, setSelectedOrderStatus] = useState(null);
     const myRef = useRef(null);
+    const history = useNavigate();
 
     useEffect(() => {
         getOrder(user.isUser).then(data => product.setOrders(data));
@@ -27,6 +30,17 @@ const Order = observer(() => {
         } catch (error) {
             console.error('Error deleting order:', error);
         }
+    };
+
+    // Function to calculate the total sum of prices
+    const calculateTotalSum = (ordersList) => {
+        let totalSum = 0;
+
+        for (const orderProduct of ordersList) {
+            totalSum += orderProduct.product.price;
+        }
+
+        return totalSum;
     };
 
     return (
@@ -126,13 +140,16 @@ const Order = observer(() => {
                                 {product.orders_lists.map(orderProduct => (
                                     <tr key={orderProduct.id}>
                                         <td>{orderProduct.product.id} </td>
-                                        <td>{orderProduct.product.name} </td>
-                                        <td>{orderProduct.product.price} </td>
+                                        <td style={{cursor:'pointer'}} onClick={() => history(PRODUCT_ROUTE + '/' + orderProduct.product.id)}>{orderProduct.product.name} </td>
+                                        <td>{orderProduct.product.price} руб.</td>
                                     </tr>
                                     
                                 ))}
                                 </tbody>
                             </Table>
+                            <div style={{textAlign:'right', marginRight: '280px'}}>
+                                <h4 className=''>Total Sum: <u>{calculateTotalSum(product.orders_lists)}</u> руб.</h4>
+                            </div>
                         </div>
                     )}
                 </Card>

@@ -7,8 +7,9 @@ import BrandBar from "../components/BrandBar";
 import ProductList from "../components/ProductList";
 import {observer} from "mobx-react-lite";
 import {Context} from "../index";
-import {fetchBrands, fetchProducts, fetchTypes} from "../http/productAPI";
+import {fetchBrands, fetchCategory, fetchProducts, fetchTypes} from "../http/productAPI";
 import Pages from "../components/Pages";
+import CategoryBar from '../components/CategoryBar';
 
 const Shop = observer(() => {
     const {user} = useContext(Context)
@@ -17,27 +18,29 @@ const Shop = observer(() => {
     useEffect(() => {
         fetchTypes().then(data => product.setTypes(data))
         fetchBrands().then(data => product.setBrands(data))
-        fetchProducts(null, null, product.page, product.limit).then(data => {
+        fetchCategory().then(data => product.setCategories(data))
+        fetchProducts(null, null, null, product.page, product.limit).then(data => {
             product.setProducts(data.rows)
             product.setTotalCount(data.count)
         })
     }, [])
 
     useEffect(() => {
-        fetchProducts(product.selectedType.id, product.selectedBrand.id, product.page, product.limit).then(data => {
+        fetchProducts(product.selectedType.id, product.selectedBrand.id, product.selectedCategory.id, product.page, product.limit).then(data => {
             product.setProducts(data.rows)
             product.setTotalCount(data.count)
         })
-    }, [product.page, product.selectedType, product.selectedBrand,])
+    }, [product.page, product.selectedType, product.selectedBrand, product.selectedCategory])
 
     return (
         <Container>
             <Row className="mt-2">
                 <Col md={3}>
                     <TypeBar />
+                    <CategoryBar />
                 </Col>
                 <Col md={9}>
-                    <BrandBar/>
+                    <BrandBar/> 
                     <ProductList />
                     <Pages/>
                 </Col>

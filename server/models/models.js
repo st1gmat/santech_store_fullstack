@@ -33,6 +33,11 @@ const Product = sequelize.define('product', {
 })
 
 
+const Category = sequelize.define('category', {
+    id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
+    name: {type: DataTypes.STRING, unique: true, allowNull: false},
+});
+
 
 const Type = sequelize.define('type', {
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
@@ -98,6 +103,12 @@ Product.belongsTo(Type);
 Brand.hasMany(Product);
 Product.belongsTo(Brand);
 
+Category.hasMany(Product);
+Product.belongsTo(Category);
+
+Category.hasMany(Product);
+Product.belongsTo(Category);
+
 Product.hasMany(ProductInfo, {as: 'info'});
 ProductInfo.belongsTo(Product);
 
@@ -127,10 +138,6 @@ module.exports = {
     Order,
     OrderProduct,
     Legal,
-    Review
+    Review,
+    Category
 }
-
-
-
-
-

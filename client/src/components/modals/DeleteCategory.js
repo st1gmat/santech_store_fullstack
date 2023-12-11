@@ -1,42 +1,42 @@
 import React, { useState, useEffect } from 'react';
 import { Table, Button } from 'react-bootstrap';
-import { deleteBrand, fetchBrands } from '../../http/productAPI';
+import { deleteCategory, fetchCategory } from '../../http/productAPI';
 import DeleteConfirmationModal from './DeleteConfirmationModal';
 
-const DeleteBrand = () => {
-  const [brands, setBrands] = useState([]);
-  const [selectedBrandId, setSelectedBrandId] = useState(null);
+const DeleteCategory = () => {
+  const [categories, setCategories] = useState([]);
+  const [selectedCategoryId, setSelectedCategoryId] = useState(null);
   const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
-    fetchBrands().then((data) => setBrands(data));
+    fetchCategory().then((data) => setCategories(data));
   }, []);
 
   const handleDelete = async (id) => {
     try {
-      await deleteBrand(id);
-      // Update the brands list after deletion
-      const updatedBrands = brands.filter((brand) => brand.id !== id);
-      setBrands(updatedBrands);
+      await deleteCategory(id);
+      // Update the categories list after deletion
+      const updatedCategories = categories.filter((category) => category.id !== id);
+      setCategories(updatedCategories);
       handleCloseModal();
     } catch (error) {
-      console.error('Error deleting brand:', error);
+      console.error('Error deleting category:', error);
     }
   };
 
   const handleShowModal = (id) => {
-    setSelectedBrandId(id);
+    setSelectedCategoryId(id);
     setShowModal(true);
   };
 
   const handleCloseModal = () => {
-    setSelectedBrandId(null);
+    setSelectedCategoryId(null);
     setShowModal(false);
   };
 
   return (
     <div>
-      <h2>Delete Brands</h2>
+      <h2>Delete Categories</h2>
       <Table striped bordered hover className="mt-4">
         <thead>
           <tr>
@@ -46,13 +46,13 @@ const DeleteBrand = () => {
           </tr>
         </thead>
         <tbody>
-          {brands.map((brand) => (
-            <tr key={brand.id}>
-              <td>{brand.id}</td>
-              <td>{brand.name}</td>
+          {categories.map((category) => (
+            <tr key={category.id}>
+              <td>{category.id}</td>
+              <td>{category.name}</td>
               <td>
                 <Button
-                  onClick={() => handleShowModal(brand.id)}
+                  onClick={() => handleShowModal(category.id)}
                   variant={'outline-danger'}
                 >
                   Удалить
@@ -66,11 +66,11 @@ const DeleteBrand = () => {
       <DeleteConfirmationModal
         show={showModal}
         onHide={handleCloseModal}
-        onDelete={() => handleDelete(selectedBrandId)}
-        productName={brands.find((brand) => brand.id === selectedBrandId)?.name}
+        onDelete={() => handleDelete(selectedCategoryId)}
+        productName={categories.find((category) => category.id === selectedCategoryId)?.name}
       />
     </div>
   );
 };
 
-export default DeleteBrand;
+export default DeleteCategory;

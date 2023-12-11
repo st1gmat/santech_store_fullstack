@@ -45,6 +45,7 @@ const CreateProduct = observer(({show, onHide}) => {
             formData.append('brandId', product.selectedBrand.id)
             formData.append('typeId', product.selectedType.id)
             formData.append('legalId', product.selectedLegal.id)
+            formData.append('categoryId', product.selectedCategory.id)
             formData.append('info', JSON.stringify(info))
             createProduct(formData).then(data => onHide())
         } catch(e){
@@ -92,6 +93,19 @@ const CreateProduct = observer(({show, onHide}) => {
                         </Dropdown.Menu>
                     </Dropdown>
                     <Dropdown className="mt-2 mb-2">
+                        <Dropdown.Toggle>{product.selectedCategory.name || "Выберите категорию"}</Dropdown.Toggle>
+                        <Dropdown.Menu>
+                            {product.categories.map(category=>
+                                <Dropdown.Item
+                                    onClick={() => product.SetSelectedCategory(category)}
+                                    key={category.id}
+                                >
+                                    {category.name}
+                                </Dropdown.Item>
+                            )}
+                        </Dropdown.Menu>
+                    </Dropdown>
+                    <Dropdown className="mt-2 mb-2">
                         <Dropdown.Toggle>{product.selectedLegal.name || "Выберите производителя"}</Dropdown.Toggle>
                         <Dropdown.Menu>
                             {product.legals.map(legal=>
@@ -104,6 +118,7 @@ const CreateProduct = observer(({show, onHide}) => {
                             )}
                         </Dropdown.Menu>
                     </Dropdown>
+
                     <Form.Control
                         value={name}
                         onChange={e => setName(e.target.value)}

@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Table, Button } from 'react-bootstrap';
 import { deleteLegal, fetchLegal } from '../../http/productAPI';
+import DeleteConfirmationModal from './DeleteConfirmationModal'; // Import your modal component
 
 const DeleteLegal = () => {
   const [legals, setLegals] = useState([]);
+  const [selectedLegalId, setSelectedLegalId] = useState(null);
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     fetchLegal().then((data) => setLegals(data));
@@ -12,16 +15,27 @@ const DeleteLegal = () => {
   const handleDelete = async (id) => {
     try {
       await deleteLegal(id);
-      const updatedTypes = legals.filter((legal) => legal.id !== id);
-      setLegals(updatedTypes);
+      const updatedLegals = legals.filter((legal) => legal.id !== id);
+      setLegals(updatedLegals);
+      handleCloseModal();
     } catch (error) {
       console.error('Error deleting legal:', error);
     }
   };
 
+  const handleShowModal = (id) => {
+    setSelectedLegalId(id);
+    setShowModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setSelectedLegalId(null);
+    setShowModal(false);
+  };
+
   return (
     <div className='mt-3'>
-        <hr />
+      <hr />
       <h2>Delete Legals</h2>
       <hr />
 
@@ -34,13 +48,13 @@ const DeleteLegal = () => {
           </tr>
         </thead>
         <tbody>
-          {legals.map((type) => (
-            <tr key={type.id}>
-              <td>{type.id}</td>
-              <td>{type.name}</td>
+          {legals.map((legal) => (
+            <tr key={legal.id}>
+              <td>{legal.id}</td>
+              <td>{legal.name}</td>
               <td>
                 <Button
-                  onClick={() => handleDelete(type.id)}
+                  onClick={() => handleShowModal(legal.id)}
                   variant={'outline-danger'}
                 >
                   Удалить
@@ -50,6 +64,13 @@ const DeleteLegal = () => {
           ))}
         </tbody>
       </Table>
+
+      <DeleteConfirmationModal
+        show={showModal}
+        onHide={handleCloseModal}
+        onDelete={() => handleDelete(selectedLegalId)}
+        productName={legals.find((legal) => legal.id === selectedLegalId)?.name}
+      />
     </div>
   );
 };
