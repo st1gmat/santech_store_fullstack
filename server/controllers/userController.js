@@ -1,7 +1,7 @@
 const ApiError = require('../error/ApiError');
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
-const {User, Basket} = require('../models/models')
+const {User, Basket, Order, Review, OrderProduct} = require('../models/models')
 
 const generateJwt = (id, email, role) => {
    return jwt.sign(
@@ -57,29 +57,69 @@ class UserController {
         }
         
     }
-    // async getUser(req, res, next) {
-    //     try {
-    //         const {id} = req.body;
-    //         console.log(id);
-    //         const user = await User.findByPk(id);
+    async getUser(req, res, next) {
+        try {
+            const { id } = req.params;
+            const user = await User.findByPk(id);
 
-    //         if (!user) {
-    //             return next(ApiError.badRequest('Пользователь не найден'));
-    //         }
+            if (!user) {
+                return next(ApiError.badRequest('Пользователь не найден'));
+            }
 
-    //         return res.json({
-    //             id: user.id,
-    //             email: user.email,
-    //             firstName: user.firstName,
-    //             lastName: user.lastName,
-    //             role: user.role
-    //         });
+            return res.json({
+                id: user.id,
+                email: user.email,
+                firstName: user.firstName,
+                lastName: user.lastName,
+                role: user.role,
+            });
 
-    //     } catch (e) {
-    //         console.error(e);
-    //         return next(ApiError.badRequest('Неверный токен'));
-    //     }
-    // }
+        } catch (e) {
+            console.error(e);
+            return next(ApiError.badRequest('Неверный токен'));
+        }
+    }
+
+    async getAllUsers(req, res, next) {
+        try {
+            const users = await User.findAll({
+                attributes: ['id', 'email', 'firstName', 'lastName', 'role'],
+            });
+
+            return res.json(users);
+        } catch (e) {
+            console.error(e);
+            return next(ApiError.internal('Ошибка при получении списка пользователей'));
+        }
+    }
+
+    async deleteUser(req, res, next) {
+        try {
+            const { id } = req.params;
+            
+            await Basket.destroy({ where: { userId: id } });
+
+            const orders = await Order.findAll({ where: { userId: id } });
+            for (const order of orders) {
+                await OrderProduct.destroy({ where: { orderId: order.id } });
+                await order.destroy();
+            }
+
+            await Review.destroy({ where: { userId: id } });
+
+            const user = await User.findByPk(id);
+            if (!user) {
+                return next(ApiError.badRequest('Пользователь не найден'));
+            }
+            await user.destroy();
+
+            return res.json({ message: 'Пользователь успешно удален' });
+
+        } catch (e) {
+            console.error(e);
+            return next(ApiError.badRequest('Неверный токен'));
+        }
+    }
 }
 
 module.exports = new UserController()

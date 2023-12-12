@@ -1,6 +1,5 @@
 import {$authHost, $host} from "./index";
 
-
 export const createType = async (type) => {
     const {data} = await $authHost.post('api/type', type)
     return data
@@ -151,6 +150,8 @@ export const updateUserOrder = async (id, status) => {
     const {data} = await $authHost.post('api/order/update/'+id, {params:{id, status}})
     return data
 }
+
+
 
 export const updateAmount = async (_id, _amount) => {
     const {data} = await $authHost.post('api/product/update/'+_id, {_id, _amount})

@@ -15,7 +15,6 @@ const DeleteType = () => {
   const handleDelete = async (id) => {
     try {
       await deleteType(id);
-      // Update the types list after deletion
       const updatedTypes = types.filter((type) => type.id !== id);
       setTypes(updatedTypes);
       handleCloseModal();

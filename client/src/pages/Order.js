@@ -7,7 +7,6 @@ import { observer } from 'mobx-react-lite';
 import { useNavigate } from 'react-router-dom';
 import { PRODUCT_ROUTE } from '../utils/consts';
 import { calculateTotalSum } from '../utils/calculations';
-import { getOneUser } from '../http/userAPI';
 
 const Order = observer(() => {
     const { product, user } = useContext(Context);

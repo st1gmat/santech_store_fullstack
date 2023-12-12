@@ -29,3 +29,32 @@ export const checkRole = async () => {
     localStorage.setItem('token', data.token)
     return jwtDecode(data.token).role
 }
+
+export const getUserById = async (userId) => {
+    try {
+        const {data} = await $authHost.get(`api/exact/${userId}`);
+        return data;
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+};
+
+export const getAllUsers = async () => {
+    try {
+        const {data} = await $authHost.get('api/user/all');
+        return data;
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+};
+
+export const deleteUserById = async (userId) => {
+    try {
+        await $authHost.delete(`api/user/delete/${userId}`);
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+};

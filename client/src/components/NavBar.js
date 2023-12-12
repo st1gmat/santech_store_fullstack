@@ -10,6 +10,7 @@ import {
   LOGIN_ROUTE,
   ORDER_ROUTE,
   SHOP_ROUTE,
+  USER_CONTROL_ROUTE
 } from '../utils/consts';
 
 const NavBar = observer(() => {
@@ -51,6 +52,13 @@ const NavBar = observer(() => {
                     className="me-2"
                   >
                     Админ панель
+                  </Button>
+                  <Button
+                    variant="outline-dark"
+                    onClick={() => history(USER_CONTROL_ROUTE)}
+                    className="me-2"
+                  >
+                    USCNTRL
                   </Button>
                   <Button
                     variant="outline-dark"
