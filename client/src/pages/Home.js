@@ -7,7 +7,7 @@ import { SHOP_ROUTE } from '../utils/consts'
 import ProductList from '../components/ProductList'
 import { observer } from 'mobx-react-lite'
 import { Context } from '../index'
-import {fetchBrands, fetchProducts, fetchTypes} from "../http/productAPI";
+import {fetchBrands, fetchProducts, fetchTypes, fetchCategory} from "../http/productAPI";
 import Pages from '../components/Pages'
 
 
@@ -16,21 +16,38 @@ const Home = observer(() => {
   const {user} = useContext(Context)
   const {product} = useContext(Context)
 
+  // useEffect(() => {
+  //     fetchTypes().then(data => product.setTypes(data))
+  //     fetchBrands().then(data => product.setBrands(data))
+  //     fetchProducts(null, null, product.page, product.limit).then(data => {
+  //         product.setProducts(data.rows)
+  //         product.setTotalCount(data.count)
+  //     })
+  // }, [])
+
+  // useEffect(() => {
+  //     fetchProducts(product.selectedType.id, product.selectedBrand.id, product.page, product.limit).then(data => {
+  //         product.setProducts(data.rows)
+  //         product.setTotalCount(data.count)
+  //     })
+  // }, [product.page, product.selectedType, product.selectedBrand,])
   useEffect(() => {
-      fetchTypes().then(data => product.setTypes(data))
-      fetchBrands().then(data => product.setBrands(data))
-      fetchProducts(null, null, product.page, product.limit).then(data => {
-          product.setProducts(data.rows)
-          product.setTotalCount(data.count)
-      })
+    fetchTypes().then(data => product.setTypes(data))
+    fetchBrands().then(data => product.setBrands(data))
+    fetchCategory().then(data => product.setCategories(data))
+    fetchProducts(null, null, null, product.page, product.limit).then(data => {
+        product.setProducts(data.rows)
+        product.setTotalCount(data.count)
+    })
   }, [])
 
   useEffect(() => {
-      fetchProducts(product.selectedType.id, product.selectedBrand.id, product.page, product.limit).then(data => {
-          product.setProducts(data.rows)
-          product.setTotalCount(data.count)
-      })
-  }, [product.page, product.selectedType, product.selectedBrand,])
+    fetchProducts(product.selectedType.id, product.selectedBrand.id, product.selectedCategory.id, product.page, product.limit).then(data => {
+        product.setProducts(data.rows)
+        product.setTotalCount(data.count)
+    })
+  }, [product.page, product.selectedType, product.selectedBrand, product.selectedCategory])
+
 
 
   return (

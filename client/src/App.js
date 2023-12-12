@@ -11,13 +11,24 @@ const App = observer(() => {
     const {user, product} = useContext(Context)
     const [loading, setLoading] = useState(true)
 
+    // useEffect(() => {
+    //     check().then(data => {
+    //         user.setUser(data.role)
+    //         user.setIsUser(data.id)
+    //         user.setIsAuth(true)
+    //     }).finally(() => setLoading(false))
+    // }, [])
     useEffect(() => {
-        check().then(data => {
-            user.setUser(data.role)
-            user.setIsUser(data.id)
-            user.setIsAuth(true)
-        }).finally(() => setLoading(false))
-    }, [])
+        check()
+            .then(data => {
+                if (data && data.role && data.id) {
+                    user.setUser(data.role);
+                    user.setIsUser(data.id);
+                    user.setIsAuth(true);
+                }
+            })
+            .finally(() => setLoading(false));
+    }, []);
 
     if (loading) {
         return <Spinner animation={"grow"}/>

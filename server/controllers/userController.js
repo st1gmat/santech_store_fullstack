@@ -13,7 +13,7 @@ const generateJwt = (id, email, role) => {
 
 class UserController {
     async registration(req, res, next) {
-        const {email, password, role} = req.body
+        const {email, password, firstName, lastName, role} = req.body
         if (!email || !password) {
             return next(ApiError.badRequest('Некорректный email или password'))
         }
@@ -22,7 +22,7 @@ class UserController {
             return next(ApiError.badRequest('Пользователь с таким email уже существует'))
         }
         const hashPassword = await bcrypt.hash(password, 5)
-        const user = await User.create({email, role, password: hashPassword})
+        const user = await User.create({email, role, firstName, lastName, password: hashPassword})
         const basket = await Basket.create({userId: user.id})
         const token = generateJwt(user.id, user.email, user.role)
         return res.json({token})
@@ -57,6 +57,29 @@ class UserController {
         }
         
     }
+    // async getUser(req, res, next) {
+    //     try {
+    //         const {id} = req.body;
+    //         console.log(id);
+    //         const user = await User.findByPk(id);
+
+    //         if (!user) {
+    //             return next(ApiError.badRequest('Пользователь не найден'));
+    //         }
+
+    //         return res.json({
+    //             id: user.id,
+    //             email: user.email,
+    //             firstName: user.firstName,
+    //             lastName: user.lastName,
+    //             role: user.role
+    //         });
+
+    //     } catch (e) {
+    //         console.error(e);
+    //         return next(ApiError.badRequest('Неверный токен'));
+    //     }
+    // }
 }
 
 module.exports = new UserController()

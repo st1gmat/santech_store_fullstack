@@ -67,10 +67,11 @@ const ProductPage = observer(() => {
                     <h3>Цена: {product.price} руб.</h3>
 
                     {user.isAuth ? 
-                    <Button variant={"outline-dark"} className="bg-success text-light" onClick={add}>Добавить в корзину</Button>
+                    <Button variant={"outline-dark"} className="bg-success text-light" disabled={!product.amount} onClick={add}>Добавить в корзину</Button>
                     : 
                     <Button variant={"outline-dark"} className="bg-success text-light" onClick={history(REG_ROUTE)}>Войти в аккаунт</Button>
                     }
+                    {!product.amount && <h4>Нет в наличии</h4>}
                     
 
                 </Card>
