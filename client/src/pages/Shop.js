@@ -10,6 +10,8 @@ import {Context} from "../index";
 import {fetchBrands, fetchCategory, fetchProducts, fetchTypes} from "../http/productAPI";
 import Pages from "../components/Pages";
 import CategoryBar from '../components/CategoryBar';
+import SortBar from '../components/SortBar';
+
 
 const Shop = observer(() => {
     const {user} = useContext(Context)

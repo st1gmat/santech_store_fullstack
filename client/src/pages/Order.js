@@ -41,6 +41,7 @@ const Order = observer(() => {
             <h1 className="pt-5 pb-2">Все заказы</h1>
 
             {product.order.map(currOrder => (
+                
                 <Card key={currOrder.id} className="d-flex w-100 pb-3  m-3">
                     <Row>
                         <Row className="row pb-1 m-3 ">
@@ -72,7 +73,7 @@ const Order = observer(() => {
                         </Row>
                         
                         
-                        {/* {console.log(currOrder.id)} */}
+                        {console.log(currOrder)}
 
                     </Row>
                     {currOrder.id === product.selectedOrder && (
@@ -91,17 +92,21 @@ const Order = observer(() => {
                             </Row>
                             <Table striped bordered hover className="mt-4">
                                 <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Name</th>
-                                    <th>Price</th>
-                                </tr>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Name</th>
+                                        <th>Price</th>
+                                    </tr>
                                 </thead>
                                 <tbody>
                                 {product.orders_lists.map(orderProduct => (
                                     <tr key={orderProduct.id}>
                                         <td>{orderProduct.product.id} </td>
-                                        <td style={{cursor:'pointer'}} onClick={() => history(PRODUCT_ROUTE + '/' + orderProduct.product.id)}>{orderProduct.product.name} </td>
+                                        <td 
+                                            style={{cursor:'pointer'}}
+                                            onClick={() => history(PRODUCT_ROUTE + '/' + orderProduct.product.id)}>
+                                                {orderProduct.product.name}
+                                        </td>
                                         <td>{orderProduct.product.price} руб.</td>
                                     </tr>
                                     

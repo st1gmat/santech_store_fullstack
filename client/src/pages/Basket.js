@@ -22,7 +22,7 @@ const Basket = observer(() => {
        
     }, [product,product._selectedOrder, a])
 
-    const refreshPage = ()=>{
+    const refreshPage = () => {
         window.location.reload();
     }
     const _delete = (id) => {

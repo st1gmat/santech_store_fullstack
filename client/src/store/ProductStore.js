@@ -14,6 +14,7 @@ export default class ProductStore {
         this._selectedBrand = {}
         this._selectedCategory = {}
         this._selectedLegal = {}
+        this._amount = 0
         this._selectedOrder = 0
         this._page = 1
         this._totalCount = 0
@@ -23,6 +24,10 @@ export default class ProductStore {
 
     setTypes(types) {
         this._types = types
+    }
+    
+    setAmount(amount) {
+        this._amount = amount
     }
 
     setBrands(brands) {
@@ -89,6 +94,10 @@ export default class ProductStore {
 
     get brands() {
         return this._brands
+    }
+
+    get amount() {
+        return this._amount
     }
 
     get categories() {
