@@ -1,13 +1,13 @@
 require('dotenv').config()
 const express = require('express')
-const sequelize = require('./db')
-const models = require('./models/models')
+const cookieParser = require('cookie-parser')
+const db = require('./models/index')
+// const models = require('./models/models')
 const cors = require('cors')
 const fileUpload = require('express-fileupload')
 const  router = require('./routes/index')
 const errorHandler = require('./middleware/ErrorHandlingMiddleware')
 const path = require('path')
-// const { log } = require('console')
 const PORT = process.env.PORT || 4000
 
 const app = express()
@@ -21,13 +21,14 @@ app.get('/',(req, res) => {res.status(208).json({message:'WoW'})})
 
 const start = async () => // функция запуска сервака
 {
-    try{
-        await sequelize.authenticate() // функция для проверки что с подключением все ок
-        await sequelize.sync({ alter: true }) // таблица будет создана если еще не существует
-        app.listen(PORT,()=> console.log(`sever run on ${PORT}`))
+    try {
+        await db.sequelize.authenticate() // функция для проверки что с подключением все ок
+        await db.sequelize.sync({alter: true}) // таблица будет создана если еще не существует
+        // await sequelize.sync() // таблица будет создана если еще не существует
+        app.listen(PORT,() => console.log(`sever run on ${PORT}`))
 
     }
-    catch(e){
+    catch(e) {
         console.log(e)
     }
 }

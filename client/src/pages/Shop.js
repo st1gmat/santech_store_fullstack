@@ -10,11 +10,9 @@ import {Context} from "../index";
 import {fetchBrands, fetchCategory, fetchProducts, fetchTypes} from "../http/productAPI";
 import Pages from "../components/Pages";
 import CategoryBar from '../components/CategoryBar';
-import SortBar from '../components/SortBar';
 
 
 const Shop = observer(() => {
-    const {user} = useContext(Context)
     const {product} = useContext(Context)
 
     useEffect(() => {
@@ -26,6 +24,8 @@ const Shop = observer(() => {
             product.setTotalCount(data.count)
         })
     }, [])
+
+    console.log(product.products);
 
     useEffect(() => {
         fetchProducts(product.selectedType.id, product.selectedBrand.id, product.selectedCategory.id, product.page, product.limit).then(data => {

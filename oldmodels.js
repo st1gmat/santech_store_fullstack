@@ -15,7 +15,6 @@ const Order = sequelize.define('order', {
     phone: {type: DataTypes.STRING,  allowNull: false},
     postcode: {type: DataTypes.STRING, allowNull: false},
     addressee: {type: DataTypes.STRING, allowNull: false},
-    status:{type: DataTypes.INTEGER, defaultValue: 1}
 })
 
 const Basket = sequelize.define('basket', {
@@ -59,6 +58,7 @@ const ProductInfo = sequelize.define('product_info', {
 
 const BasketProduct = sequelize.define('basket_product', {
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
+    quantity: {type: DataTypes.INTEGER}
 })
 
 const OrderProduct = sequelize.define('order_product', {
@@ -78,11 +78,6 @@ const Legal = sequelize.define('legal', {
     comment: {type: DataTypes.STRING},
 })
 
-const Review = sequelize.define('review', {
-    id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
-    comment: {type: DataTypes.STRING, allowNull: false},
-    rate: {type: DataTypes.INTEGER, allowNull: false},
-})
 
 User.hasOne(Basket);
 Basket.belongsTo(User);
@@ -108,9 +103,6 @@ Product.belongsTo(Brand);
 Category.hasMany(Product);
 Product.belongsTo(Category);
 
-Category.hasMany(Product);
-Product.belongsTo(Category);
-
 Product.hasMany(ProductInfo, {as: 'info'});
 ProductInfo.belongsTo(Product);
 
@@ -121,12 +113,6 @@ OrderProduct.belongsTo(Product);
 
 Legal.hasMany(Product);
 Product.belongsTo(Legal);
-
-User.hasMany(Review)
-Review.belongsTo(User)
-
-Product.hasMany(Review)
-Review.belongsTo(Product)
 
 
 module.exports = {

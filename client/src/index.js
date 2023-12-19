@@ -7,7 +7,7 @@ import ProductStore from "./Store/ProductStore";
 
 export const Context = createContext(null)
 const rootElement = document.getElementById('root');
-const root = createRoot(rootElement); // createRoot(container!) if you use TypeScript
+const root = createRoot(rootElement);
 console.log(process.env.REACT_APP_API_URL)
 root.render(
     <Context.Provider value={{

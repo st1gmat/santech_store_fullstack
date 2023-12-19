@@ -15,6 +15,11 @@ export const fetchTypes = async () => {
     return data
 }
 
+export const fetchTypeById = async (id) => {
+    const { data } = await $host.get(`api/type/${id}`);
+    return data;
+};
+
 export const createBrand = async (brand) => {
     const {data} = await $authHost.post('api/brand', brand)
     return data
@@ -30,6 +35,11 @@ export const fetchBrands = async () => {
     return data
 }
 
+export const fetchBrandById = async (id) => {
+    const { data } = await $host.get(`api/brand/${id}`);
+    return data;
+};
+
 export const createCategory = async (category) => {
     const {data} = await $authHost.post('api/category/', category)
     return data
@@ -44,6 +54,11 @@ export const fetchCategory = async () => {
     const {data} = await $host.get('api/category', )
     return data
 }
+
+export const fetchCategoryById = async (id) => {
+    const { data } = await $host.get(`api/category/${id}`);
+    return data;
+};
 
 export const fetchLegal = async () => {
     const {data} = await $host.get('api/legal', )
@@ -62,7 +77,7 @@ export const deleteLegal = async (id) => {
 
 
 export const createProduct = async (product) => {
-    const {data} = await $authHost.post('/api/product', product)
+    const {data} = await $authHost.post('/api/product/', product)
     return data
 }
 
@@ -82,7 +97,7 @@ export const setDescription = async (_id, text) => {
 }
 
 export const fetchProducts = async (typeId, brandId, categoryId, page, limit) => {
-    const {data} = await $host.get('api/product', {params: {
+    const {data} = await $host.get('api/product/', {params: {
             typeId, brandId, categoryId, page, limit
         }})
     // console.log('Request parameters:', typeId, brandId, categoryId, page, limit);
@@ -97,16 +112,15 @@ export const fetchAllProducts = async () => {
 
 
 export const fetchOneProduct = async (id) => {
-    const {data} = await $host.get('api/product' + '/'+id)
+    const {data} = await $host.get('api/product/'+id)
     return data
 }
 
 // ------ Корзина ------- //
-
-export const addToBasket = async (productId) => {
-    const {response} = await $authHost.post('api/basket', productId)
-    return response
-}
+export const addToBasket = async (data) => {
+    const { response } = await $authHost.post('api/basket', data);
+    return response;
+};
 
 export const deleteFromBasket = async (id) => {
     const {response} = await $authHost.post('api/basket/delete', {id:id})

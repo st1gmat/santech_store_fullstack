@@ -19,7 +19,6 @@ router.use('/basket', basketRouter)
 router.use('/order', orderRouter)
 router.use('/legal', legalRouter)
 router.use('/category', categoryRouter)
-// router.use('/userdata', userDataRouter)
 
 
 module.exports = router

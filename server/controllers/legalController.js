@@ -1,5 +1,5 @@
 const path = require("path");
-const {Legal, Product} = require("../models/models");
+const {legals, products} = require("../models/");
 const ApiError = require("../error/ApiError");
 
 class LegalController {
@@ -8,7 +8,7 @@ class LegalController {
             let {name, legal_p, descr, type, phone, located, bill, inn, comment} = req.body
 
 
-            const product = await Legal.create({name, legal_p, descr, type, located, bill, inn, comment, phone});
+            const product = await legals.create({name, legal_p, descr, type, located, bill, inn, comment, phone});
             return res.json(product)
         } catch (e) {
             next(ApiError.badRequest(e.message))
@@ -18,36 +18,45 @@ class LegalController {
     async show(req, res, next) {
         try {
             let {id} = req.body
-            const product = await Legal.findOne(id);
+            const product = await legals.findOne(id);
             return res.json(product)
         } catch (e) {
             next(ApiError.badRequest(e.message))
         }
     }
 
-    async delete(req, res) {
-        const { id } = req.params;
-        
-        const legal = await Legal.findByPk(id);
-        
-        if (!brand) {
-            return ApiError.badRequest('Brand not found');
+    async delete(req, res, next) {
+        try {
+            const { id } = req.params;
+            
+            const legal = await legals.findByPk(id);
+            
+            if (!brand) {
+                return ApiError.badRequest('Brand not found');
+            }
+
+            await legal.destroy();
+
+            await products.update({ legallId: null }, { where: { legallId: id } });
+
+            return res.json({ message: 'legals deleted' });
+        } catch (e) {
+            next(ApiError.badRequest(e.message))  // middleware error => next
         }
-
-        await legal.destroy();
-
-        await Product.update({ legallId: null }, { where: { legallId: id } });
-
-        return res.json({ message: 'Legal deleted' });
     }
 
 
 
-    async showAll(req, res) {
-        const legal = await Legal.findAll();
-        return res.json(legal)
+    async showAll(req, res, next) {
+        try {
 
+            const legal = await legals.findAll();
+            return res.json(legal)
+        } catch (e) {
+            next(ApiError.badRequest(e.message))  // middleware error => next
+        }
     }
 
 }
-    module.exports = new LegalController()
+
+module.exports = new LegalController()

@@ -1,7 +1,8 @@
 const uuid = require('uuid')
 const path = require('path');
-const {Product, ProductInfo, BasketProduct, OrderProduct} = require('../models/models')
+const {products, product_infos, basket_products, order_products} = require('../models/')
 const ApiError = require('../error/ApiError');
+const { log } = require('console');
 const fs = require('fs').promises;
 
 class ProductController {
@@ -11,11 +12,11 @@ class ProductController {
             const {img} = req.files
             let fileName = uuid.v4() + ".jpg"
             img.mv(path.resolve(__dirname, '..', 'static', fileName))
-            const product = await Product.create({name, price, brandId, typeId, img: fileName, legalId, amount, country, categoryId});
+            const product = await products.create({name, price, brandId, typeId, img: fileName, legalId, amount, country, categoryId});
             if (info) {
                 info = JSON.parse(info)
                 info.forEach(i =>
-                    ProductInfo.create({
+                    product_infos.create({
                         title: i.title,
                         description: i.description,
                         productId: product.id
@@ -31,7 +32,7 @@ class ProductController {
     async setDescription(req, res, next) {
         try {
             let {_id,text} = req.body
-           const product = await Product.update(
+           const product = await products.update(
                 {_info: text},
                 {where: {id: _id}}
             );
@@ -47,102 +48,115 @@ class ProductController {
             page = page || 1
 
             limit = limit || 2
-
+            console.log(`${typeId}, ${brandId}, ${categoryId}, ${limit}, ${page}`)
             let offset = page * limit - limit
-            let products;
+            let exactProducts;
             if (!brandId && !typeId && !categoryId) {
-                products = await Product.findAndCountAll({limit, offset})
+                exactProducts = await products.findAndCountAll({limit, offset})
             }
             if (!brandId && !typeId && categoryId) {
-                products = await Product.findAndCountAll({where:{categoryId},limit, offset})
+                exactProducts = await products.findAndCountAll({where:{categoryId},limit, offset})
             }
 
             if (brandId && !typeId && categoryId) {
-                products = await Product.findAndCountAll({where:{brandId, categoryId}, limit, offset})
+                exactProducts = await products.findAndCountAll({where:{brandId, categoryId}, limit, offset})
             }
             if (brandId && !typeId && !categoryId) {
-                products = await Product.findAndCountAll({where:{brandId}, limit, offset})
+                exactProducts = await products.findAndCountAll({where:{brandId}, limit, offset})
             }
 
             if (!brandId && typeId && categoryId) {
-                products = await Product.findAndCountAll({where:{typeId, categoryId}, limit, offset})
+                exactProducts = await products.findAndCountAll({where:{typeId, categoryId}, limit, offset})
             }
             if (!brandId && typeId && !categoryId) {
-                products = await Product.findAndCountAll({where:{typeId}, limit, offset})
+                exactProducts = await products.findAndCountAll({where:{typeId}, limit, offset})
             }
 
             if (brandId && typeId && categoryId) {
-                products = await Product.findAndCountAll({where:{typeId, brandId, categoryId}, limit, offset})
+                exactProducts = await products.findAndCountAll({where:{typeId, brandId, categoryId}, limit, offset})
             }
             if (brandId && typeId && !categoryId) {
-                products = await Product.findAndCountAll({where:{typeId, brandId}, limit, offset})
+                exactProducts = await products.findAndCountAll({where:{typeId, brandId}, limit, offset})
             }
-            return res.json(products)
+            return res.json(exactProducts)
         } catch(e) {
             console.log(e)
         }
     }
 
     async getOne(req, res) {
-        const {id} = req.params
-        const product = await Product.findOne(
-            {
-                where: {id},
-                include: [{model: ProductInfo, as: 'info'}]
-            },
-        )
-        return res.json(product)
+        try{
+            const {id} = req.params
+            const product = await products.findOne(
+                {
+                    where: {id},
+                    include: [{model: product_infos, as: 'info'}]
+                },
+            )
+            return res.json(product)
+        } catch(e) {
+            console.error(error);
+        }
+       
     }
 
     async delOne(req, res) {
-        const {id} = req.params
-        const product = await Product.update(
-            {amount: '0'},
-            {where: {id: id}}
-        )
-        return res.json(product)
+        try{
+            const {id} = req.params
+            const product = await products.update(
+                {amount: '0'},
+                {where: {id: id}}
+            )
+            return res.json(product)
+        } catch(e) {
+            console.error(error);
+        }
     }
     
     async updated(req, res) {
-        const {_id,_amount} = req.body
-        const product = await Product.update(
-            {amount: _amount},
-            {where: {id: _id}}
-        )
-        return res.json(product)
+        try{
+            const {_id,_amount} = req.body
+            const product = await products.update(
+                {amount: _amount},
+                {where: {id: _id}}
+            )
+            return res.json(product)
+        } catch(e) {
+            console.error(error);
+        }
     }
 
     async fullDelete(req, res, next) {
         const { id } = req.params;
     
         try {
-            const product = await Product.findByPk(id);
+            const product = await products.findByPk(id);
 
             if (!product) {
-                return next(ApiError.notFound('Product not found'));
+                return next(ApiError.notFound('products not found'));
             }
     
-            await ProductInfo.destroy({ where: { productId: id } });
-            await BasketProduct.destroy({ where: { productId: id } });
-            await OrderProduct.destroy({ where: { productId: id } });
+            await product_infos.destroy({ where: { productId: id } });
+            await basket_products.destroy({ where: { productId: id } });
+            await order_products.destroy({ where: { productId: id } });
 
-            await Product.destroy({ where: { id } });
+            await products.destroy({ where: { id } });
 
             const imagePath = path.resolve(__dirname, '..', 'static', product.img);
             await fs.unlink(imagePath);
 
-            return res.json({ message: 'Product and related records deleted successfully' });
+            return res.json({ message: 'products and related records deleted successfully' });
         } catch (e) {
             next(ApiError.badRequest(e.message));
         }
     }
     async getAbsAll(req, res, next) {
         try {
-          const products = await Product.findAll({
-            include: [{ model: ProductInfo, as: 'info' }],
+          const allProducts = await products.findAll({
+            include: [{ model: product_infos, as: 'info' }],
           });
     
-          return res.json(products);
+          return res.json(allProducts);
         } catch (e) {
           next(ApiError.badRequest(e.message));
         }

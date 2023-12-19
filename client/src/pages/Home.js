@@ -16,21 +16,6 @@ const Home = observer(() => {
   const {user} = useContext(Context)
   const {product} = useContext(Context)
 
-  // useEffect(() => {
-  //     fetchTypes().then(data => product.setTypes(data))
-  //     fetchBrands().then(data => product.setBrands(data))
-  //     fetchProducts(null, null, product.page, product.limit).then(data => {
-  //         product.setProducts(data.rows)
-  //         product.setTotalCount(data.count)
-  //     })
-  // }, [])
-
-  // useEffect(() => {
-  //     fetchProducts(product.selectedType.id, product.selectedBrand.id, product.page, product.limit).then(data => {
-  //         product.setProducts(data.rows)
-  //         product.setTotalCount(data.count)
-  //     })
-  // }, [product.page, product.selectedType, product.selectedBrand,])
   useEffect(() => {
     fetchTypes().then(data => product.setTypes(data))
     fetchBrands().then(data => product.setBrands(data))
@@ -56,7 +41,7 @@ const Home = observer(() => {
       
         <div className={styles.contInfo}>
           <Card className={styles.cardBox}>
-              <h1>Welcome to Our Store</h1>
+              <h1>Welcome to SantechStore</h1>
               <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Facer upiditate veniam porro. Dolorum repudiandae tempore, obcaecati minus a optio harum inventore tempora ab!</p>
               <div className='mt-2'>
                 <Button variant="outline-light" className="mr-4 " onClick={() => history(SHOP_ROUTE)}>Shop Now</Button>

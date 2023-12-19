@@ -7,7 +7,7 @@ import {
 import {authRoutes,publicRoutes} from "../routes";
 import {Context} from "../index";
 import {observer} from "mobx-react-lite";
-import Shop from "../Pages/Shop";
+import Home from "../Pages/Home";
 
 const AppRouter = observer(() =>  {
     const {product, user} = useContext(Context)
@@ -21,7 +21,7 @@ const AppRouter = observer(() =>  {
                 {publicRoutes.map(({path , Component}) =>
                    <Route key = {path} path = {path} element={<Component/>} exact/>
                 )}
-               <Route path = "*" element={<Shop/>}/>
+               <Route path = "*" element={<Home/>}/>
             </Routes>
 
     );

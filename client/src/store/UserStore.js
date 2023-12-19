@@ -20,6 +20,7 @@ export default class UserStore{
         this._isRole = bool
     }
 
+
     get isAuth() {
         return this._isAuth
     }

@@ -1,7 +1,7 @@
 const ApiError = require('../error/ApiError');
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
-const {User, Basket, Order, Review, OrderProduct} = require('../models/models')
+const {users, baskets, orders, order_products} = require('../models/')
 
 const generateJwt = (id, email, role) => {
    return jwt.sign(
@@ -17,20 +17,20 @@ class UserController {
         if (!email || !password) {
             return next(ApiError.badRequest('Некорректный email или password'))
         }
-        const candidate = await User.findOne({where: {email}})
+        const candidate = await users.findOne({where: {email}})
         if (candidate) {
             return next(ApiError.badRequest('Пользователь с таким email уже существует'))
         }
         const hashPassword = await bcrypt.hash(password, 5)
-        const user = await User.create({email, role, firstName, lastName, password: hashPassword})
-        const basket = await Basket.create({userId: user.id})
+        const user = await users.create({email, role, firstName, lastName, password: hashPassword})
+        const basket = await baskets.create({userId: user.id})
         const token = generateJwt(user.id, user.email, user.role)
         return res.json({token})
     }
 
     async login(req, res, next) {
         const {email, password} = req.body
-        const user = await User.findOne({where: {email}})
+        const user = await users.findOne({where: {email}})
         if (!user) {
             return next(ApiError.internal('Пользователь не найден'))
         }
@@ -60,7 +60,7 @@ class UserController {
     async getUser(req, res, next) {
         try {
             const { id } = req.params;
-            const user = await User.findByPk(id);
+            const user = await users.findByPk(id);
 
             if (!user) {
                 return next(ApiError.badRequest('Пользователь не найден'));
@@ -82,11 +82,11 @@ class UserController {
 
     async getAllUsers(req, res, next) {
         try {
-            const users = await User.findAll({
+            const allUsers = await users.findAll({
                 attributes: ['id', 'email', 'firstName', 'lastName', 'role'],
             });
 
-            return res.json(users);
+            return res.json(allUsers);
         } catch (e) {
             console.error(e);
             return next(ApiError.internal('Ошибка при получении списка пользователей'));
@@ -97,17 +97,16 @@ class UserController {
         try {
             const { id } = req.params;
             
-            await Basket.destroy({ where: { userId: id } });
+            await baskets.destroy({ where: { userId: id } });
 
-            const orders = await Order.findAll({ where: { userId: id } });
-            for (const order of orders) {
-                await OrderProduct.destroy({ where: { orderId: order.id } });
+            const all_orders = await orders.findAll({ where: { userId: id } });
+            for (const order of all_orders) {
+                await order_products.destroy({ where: { orderId: order.id } });
                 await order.destroy();
             }
 
-            await Review.destroy({ where: { userId: id } });
 
-            const user = await User.findByPk(id);
+            const user = await users.findByPk(id);
             if (!user) {
                 return next(ApiError.badRequest('Пользователь не найден'));
             }
